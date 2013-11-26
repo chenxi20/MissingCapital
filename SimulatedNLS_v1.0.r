@@ -54,5 +54,5 @@ return(res2)
 v0=c(0.1,0.2,0.3)
 Q(theta=v0,S=1,N=500,TT=5,data=Data)
 
-bnlm = optim(v0,Q,S=1,N=500,TT=5,data=Data, method ="L-BFGS-B",control = list(factr=1e10,pgtol=0))
+#bnlm = optim(v0,Q,S=1,N=500,TT=5,data=Data, method ="L-BFGS-B",control = list(factr=1e10,pgtol=0))
 
