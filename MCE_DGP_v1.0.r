@@ -95,7 +95,7 @@ Mit=cbind(Mit, Mit_tmp)
 
 #Generating output
 #----------------------------------------------------------------------------
-if (stoTC==F & ltt==F){ Yit=(Kit^e0)*(Lit^e1)*(Mit^e2)*exp(rnorm(N,se))}
+if (stoTC==F & ltt==F){ Yit=(Kit^e0)*(Lit^e1)*(Mit^e2)*exp(rnorm(N,0,se))}
 if (stoTC==T & ltt==F){ Yit=(Kit^e0)*(Lit^e1)*(Mit^e2)*exp(wit)*exp(rnorm(N,0,se))}
 if (stoTC==F & ltt==T){ Yit=exp(f0+f1*year)*(Kit^e0)*(Lit^e1)*(Mit^e2)*exp(rnorm(N,0,se))}  
 if (stoTC==T & ltt==T){ Yit=exp(f0+f1*year)*(Kit^e0)*(Lit^e1)*(Mit^e2)*exp(wit)*exp(rnorm(N,0,se))}
