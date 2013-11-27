@@ -9,8 +9,8 @@ library(devtools)
 #Work directoty:
 #setwd("/Users/chen/Desktop/Works_25112013/MyRoutines_25112013")
 set.seed(123456)
-source_url("https://raw.github.com/chenxi20/MissingCapital/master/MCE_DGP_v1.0.r")
-#source("")
+source_url("https://raw.github.com/chenxi20/MissingCapital/master/MCE_DGP_v1.1.r")
+source("D:/Rcenter/MyRoutines/MCE_DGP_v1.1.r")
 
 Data=DGP(N=500,Tt=5,a0=0.1,a1=0.95,sexi=0.1,w0bar=1,sew0=1,K0bar=5,seK0=1,delta=0.08,b0=0.5,b1=0.9,seI=0.01,c0=5,c1=0.5,c2=0.8,seL=0.9,d0=10,d1=0.5,d2=0.5,seM=0.9,e0=0.2,e1=0.3,e2=0.5,se=0.01,f0=0.5,f1=0.5,stata=F,stoTC=F,ltt=F) 
 YYY=(Data$K^0.2)*(Data$L^0.3)*(Data$M^0.5)
