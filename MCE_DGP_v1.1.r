@@ -1,47 +1,8 @@
 #Monte Carlo Experiments -- Data Generating Process with function DGP() 
 #Xi Chen,  STATEC Luxembourg 
-#Version 1.0, 08/09/2013
+#Version 1.0, 08/09/2013 - 27/11/2013
 #This code generate a fully simulated data set.
 
-
-#Code testing infrastructure
-#----------------------------------------------------------------------------
-#rm(list = ls())
-#Work directoty:
-#getwd()
-#setwd("C:/Users/qcc145/Documents/Work STATEC2013/MCE")
-#set.seed(12345)
-#Control parameters:
-#N=3		  #Number of individual
-#Tt=2		  #Number of periods
-#J=8		  #Number of variables
-#a0=0.1		  #Productivity Markov process
-#a1=0.9
-#sexi=0.1
-#w0bar=1	  #Initial productivity level in log
-#sew0=1
-#K0bar=5	  #Initial capital stock in log-normal distribution
-#seK0=1
-#seI=0.01
-#delta=0.08	  #Fixed depreciation rate
-#b0=0.4		  #Investment rule
-#b1=0.6
-#c0=50		  #Labor demande
-#c1=0.5
-#c2=0.8
-#seL=0.1
-#d0=1		 #Material demande
-#d1=0.5
-#d2=0.5
-#seM=0.5
-#e0=0.2      #Production function
-#e1=0.4
-#e2=0.7
-#se=1
-#f0=0.5
-#f1=0.5
-#stoTC=T
-#ltt=F
 
 DGP = function(N,Tt,a0,a1,sexi,w0bar,sew0,K0bar,seK0,delta,b0,b1,seI,c0,c1,c2,seL,d0,d1,d2,seM,e0,e1,e2,se,f0,f1,stata=F,stoTC=T,ltt=F){
   require(plyr)
