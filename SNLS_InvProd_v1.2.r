@@ -11,18 +11,14 @@ library(xtable)
 library(devtools)
 library(optimx)
 #Work directoty:
-setwd("D:/Rcenter/MyRoutines")
-source("D:/Rcenter/MyRoutines/Prod_DGP_v1.1.r")
+#setwd("D:/Rcenter/MyRoutines")
+#source("D:/Rcenter/MyRoutines/Prod_DGP_v1.1.r")
 
 set.seed(123456)
-#source_url("https://raw.github.com/chenxi20/MissingCapital/master/MCE_DGP_v1.1.r")
+source_url("https://raw.github.com/chenxi20/MissingCapital/master/Prod_DGP_v1.1.r")
 
-Data=DGP(N=500,Tt=5,a0=0.1,a1=0.95,sexi=0.1,w0bar=1,sew0=1,K0bar=5,seK0=1,delta=0.08,b0=0.5,b1=0.9,seI=0.01,c0=5,c1=0.5,c2=0.8,seL=0.9,d0=10,d1=0.5,d2=0.5,seM=0.9,e0=0.2,e1=0.3,e2=0.5,se=0.01,f0=0.5,f1=0.5,stata=F,stoTC=F,ltt=F)
+Data=DGP(N=500,Tt=5,a0=0.1,a1=0.95,sexi=0.1,w0bar=1,sew0=1,K0bar=5,seK0=1,delta=0.08,b0=0.5,b1=0.9,seI=0.01,c0=5,c1=0.5,c2=0.8,seL=0.9,d0=10,d1=0.5,d2=0.5,seM=0.9,e0=0.2,e1=0.3,e2=0.5,se=1,f0=0.5,f1=0.5,stata=F,stoTC=F,ltt=F)
 names(Data)
-
-
-#YY=Data$Y
-Data=data.frame(cbind(Data,YY,uu))
 
 Qtrue=function(theta,N,TT,data){
   alpha=theta[1]
@@ -35,7 +31,7 @@ Qtrue=function(theta,N,TT,data){
   for (n in 1:N){
     dn=subset(d,id==n)
     res2_sum=matrix(0,ncol=1,nrow=TT-1)
-    Kn=(dn$YY*dn$uu^(-1)*dn$L^(-beta)*dn$M^(-gamma))^(1/alpha)
+    Kn=(dn$Y*dn$u^(-1)*dn$L^(-beta)*dn$M^(-gamma))^(1/alpha)
     res2_sum=res2_sum+(dn$I[2:TT]-Kn[2:TT]+(1-delta)*Kn[1:(TT-1)])*(dn$I[2:TT] -Kn[2:TT]+(1-delta)*Kn[1:(TT-1)])
     res2_NT=rbind(res2_NT,res2_sum)
   }
@@ -54,7 +50,7 @@ Qnaive=function(theta,N,TT,data){
   for (n in 1:N){
     dn=subset(d,id==n)
     res2_sum=matrix(0,ncol=1,nrow=TT-1)
-    Kn=(dn$YY*dn$L^(-beta)*dn$M^(-gamma))^(1/alpha)
+    Kn=(dn$Y*dn$L^(-beta)*dn$M^(-gamma))^(1/alpha)
     res2_sum=res2_sum+(dn$I[2:TT]-Kn[2:TT]+(1-delta)*Kn[1:(TT-1)])*(dn$I[2:TT] -Kn[2:TT]+(1-delta)*Kn[1:(TT-1)])
     res2_NT=rbind(res2_NT,res2_sum)
   }
@@ -89,23 +85,22 @@ Qsim2=function(theta,S,N,TT,data){
   #d=data
   delta=0.08
   t=c(1:TT)
-  res2_NT_S=matrix(0,ncol=1,nrow=N*(TT-1)+1)
+  h_S=matrix(0,ncol=1,nrow=N*(TT-1))
   for (s in 1:S){
-    res2_NT_s=0
     set.seed(1234+s)
-    U_s=rnorm(N*TT,0,5)
-    d=data.frame(cbind(data,U_s))
-      for (n in 1:N){
-       dn=subset(d,id==n)
-       Kn=(dn$YY*exp(dn$U_s)^(-see)*dn$L^(-beta)*dn$M^(-gamma))^(1/alpha)
-       res2n=(dn$I[2:TT]-Kn[2:TT]+(1-delta)*Kn[1:(TT-1)])*(dn$I[2:TT] -Kn[2:TT]+(1-delta)*Kn[1:(TT-1)])
-       res2_NT_s=c(res2_NT_s,res2n)
+    v_s=rnorm(N*TT,0,1)
+    data_s=data.frame(cbind(data,v_s))
+    for (n in 1:N){
+       dn_s=subset(data_s,id==n)
+       Kn_s=(dn_s$Y*exp(dn_s$v_s)^(-see)*dn_s$L^(-beta)*dn_s$M^(-gamma))^(1/alpha)
+       hn_s_tmp = Kn_s[2:TT]-(1-delta)*Kn_s[1:(TT-1)]
+       if(n==1){hn_s=hn_s_tmp}
+       if(n>1){hn_s=c(hn_s,hn_s_tmp)}
       }
-    res2_NT_S= cbind(res2_NT_S,res2_NT_s)
+    h_S=h_S+as.matrix(hn_s)
    }
-  #head(res2_NT_S)
-  res2_NT_mean=res2_NT_S/S  
-  res2=sum(res2_NT_mean)/(2*N*(TT-1))
+  H_S=h_S/S
+  res2=sum((data$I[2:TT]-H_S)*(data$I[2:TT]-H_S))
   return(res2)
 }
 
